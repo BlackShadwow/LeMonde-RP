@@ -1,0 +1,311 @@
+const Discord = require("discord.js");
+const Enmap = require("enmap");
+const fs = require("fs");
+const botconfig = require("../botconfig.json");
+const puissance = JSON.parse(fs.readFileSync("./userinfo.json"));
+
+module.exports.run = async (bot, message, args) => {
+  if (!message.content.startsWith(botconfig.prefix)) return;
+
+  //COOLDOWNS
+  let client = bot;
+  let member = message.author.id;
+  if (
+    client.cooldownRoll.get(member) === undefined ||
+    client.cooldownRoll.get(member, "time") === undefined
+  ) {
+    client.cooldownRoll.set(member, "time", 0);
+  }
+
+  if (
+    client.cooldownRoll.get(member, "time") + 1000 * 60 * 60 * 12 >
+    new Date().getTime()
+  ) {
+    let time = client.cooldownRoll.get(member, "time");
+    let remaining = time - (new Date().getTime() - 1000 * 60 * 60 * 12 * 2);
+    let heure = Math.floor(remaining / 3600000);
+    let minute = Math.floor(remaining / 60000 - heure * 60);
+    let seconde = Math.floor(remaining / 1000 - (heure * 3600 + minute * 60));
+    let secondeI =
+        seconde === 0
+          ? ""
+          : seconde + (seconde === 1 ? "seconde " : "secondes "),
+      minuteI =
+        heure === 0 ? "" : minute + (minute === 1 ? "minute " : "minutes "),
+      heureI = heure === 0 ? "" : heure + (heure === 1 ? "heure " : "heures ");
+    let times = heureI + "" + minuteI + "" + secondeI;
+    return message.channel.send(
+      "Tu est trop fatiguer pour t'entraîner.. Reviens dans " +
+        times +
+        "et tu sera en forme."
+    );
+  } else {
+    client.cooldownRoll.set(member, new Date().getTime(), "time");
+
+    let user = message.author;
+    var nombre = getRandomInt(1, 100);
+    var phrase = animate(1, 1200);
+
+    //ROLES
+    let faible = message.guild.roles.cache.find(
+      (role) => role.id === "634067774322245644"
+    );
+    let h = message.guild.roles.cache.find(
+      (role) => role.id === "634067680499990529"
+    );
+    let g = message.guild.roles.cache.find(
+      (role) => role.id === "634067352203296828"
+    );
+    let f = message.guild.roles.cache.find(
+      (role) => role.id === "634067082744692776"
+    );
+    let e = message.guild.roles.cache.find(
+      (role) => role.id === "634067841334902794"
+    );
+    let d = message.guild.roles.cache.find(
+      (role) => role.id === "634068114882953239"
+    );
+    let c = message.guild.roles.cache.find(
+      (role) => role.id === "634068423709818881"
+    );
+    let b = message.guild.roles.cache.find(
+      (role) => role.id === "634068495252062222"
+    );
+    let a = message.guild.roles.cache.find(
+      (role) => role.id === "634068554697932810"
+    );
+    let aPlus = message.guild.roles.cache.find(
+      (role) => role.id === "634068643042558002"
+    );
+    let ultime = message.guild.roles.cache.find(
+      (role) => role.id === "634069094676824116"
+    );
+    let booster = message.guild.roles.cache.find(
+      (role) => role.id === "668494704308125717"
+    );
+
+    //PHRASES
+    if (phrase <= 200) {
+      if (phrase >= 0) {
+        message.channel.send(
+          `**${user.username} s'entraîne en utilisant son pouvoir sur un éventail en paille et le détruit.**`
+        );
+      }
+    }
+
+    if (phrase <= 400) {
+      if (phrase > 200) {
+        message.channel.send(`**${user.username} s'entraîne très dur.**`);
+      }
+    }
+
+    if (phrase <= 600) {
+      if (phrase > 400) {
+        message.channel.send(
+          `**${user.username} fait exploser un pillier avec sa force en s'entraînant.**`
+        );
+      }
+    }
+
+    if (phrase <= 800) {
+      if (phrase > 600) {
+        message.channel.send(
+          `**${user.username} s'entraîne sur les toits de l'arène.**`
+        );
+      }
+    }
+
+    if (phrase <= 1000) {
+      if (phrase > 800) {
+        message.channel.send(
+          `**${user.username} s'entraîne sur une statue de pierre et la brise en morceaux.**`
+        );
+      }
+    }
+    if (phrase <= 1200) {
+      if (phrase > 1000) {
+        message.channel.send(`**${user.username} s'entraîne avec rage.**`);
+      }
+    }
+    if (phrase <= 1400) {
+      if (phrase > 1200) {
+        message.channel.send(`**${user.username} s'entraîne.**`);
+      }
+    }
+
+    //DONS DE ROLE
+    if (message.member.roles.cache.has(faible.id)) {
+      //NIVEAU FAIBLE
+      if (nombre > 0) {
+        message.member.roles.remove(faible).then(() => {
+          message.member.roles.add(h); //NIVEAU H
+          message.channel.send(
+            `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner.`
+          );
+        });
+      }
+    }
+    if (message.member.roles.cache.has(h.id)) {
+      //NIVEAU H
+      if (nombre < 20) {
+        message.channel.send(
+          `Vous avez tiré le **${nombre}**, malgré ce que vous avez fait, vous avez raté votre entraînement.`
+        );
+      }
+      if (nombre > 20) {
+        message.member.roles.remove(h).then(() => {
+          message.member.roles.add(g); //NIVEAU G
+          message.channel.send(
+            `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner.`
+          );
+        });
+      }
+    }
+    if (message.member.roles.cache.has(g.id)) {
+      //NIVEAU G
+      if (nombre < 30) {
+        message.channel.send(
+          `Vous avez tiré le **${nombre}**, malgré ce que vous avez fait, vous avez raté votre entraînement.`
+        );
+      }
+      if (nombre > 30) {
+        message.member.roles.remove(g).then(() => {
+          message.member.roles.add(f); //NIVEAU F
+          message.channel.send(
+            `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner.`
+          );
+        });
+      }
+    }
+    if (message.member.roles.cache.has(f.id)) {
+      //NIVEAU F
+      if (nombre < 40) {
+        message.channel.send(
+          `Vous avez tiré le **${nombre}**, malgré ce que vous avez fait, vous avez raté votre entraînement.`
+        );
+      }
+      if (nombre > 40) {
+        message.member.roles.remove(f).then(() => {
+          message.member.roles.add(e); //NIVEAU E
+          message.channel.send(
+            `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner.`
+          );
+        });
+      }
+    }
+    if (message.member.roles.cache.has(e.id)) {
+      //NIVEAU E
+      if (nombre < 50) {
+        message.channel.send(
+          `Vous avez tiré le **${nombre}**, malgré ce que vous avez fait, vous avez raté votre entraînement.`
+        );
+      }
+      if (nombre > 50) {
+        message.member.roles.remove(e).then(() => {
+          message.member.roles.add(d); //NIVEAU D
+          message.channel.send(
+            `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner.`
+          );
+        });
+      }
+    }
+    if (message.member.roles.cache.has(d.id)) {
+      //NIVEAU D
+      if (nombre < 60) {
+        message.channel.send(
+          `Vous avez tiré le **${nombre}**, malgré ce que vous avez fait, vous avez raté votre entraînement.`
+        );
+      }
+      if (nombre > 60) {
+        message.member.roles.remove(d).then(() => {
+          message.member.roles.add(c); //NIVEAU C
+          message.channel.send(
+            `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner.`
+          );
+        });
+      }
+    }
+    if (message.member.roles.cache.has(c.id)) {
+      //NIVEAU C
+      if (nombre < 70) {
+        message.channel.send(
+          `Vous avez tiré le **${nombre}**, malgré ce que vous avez fait, vous avez raté votre entraînement.`
+        );
+      }
+      if (nombre > 70) {
+        message.member.roles.remove(c).then(() => {
+          message.member.roles.add(b); //NIVEAU B
+          message.channel.send(
+            `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner.`
+          );
+        });
+      }
+    }
+    if (message.member.roles.cache.has(b.id)) {
+      //NIVEAU B
+      if (nombre < 80) {
+        message.channel.send(
+          `Vous avez tiré le **${nombre}**, malgré ce que vous avez fait, vous avez raté votre entraînement.`
+        );
+      }
+      if (nombre > 80) {
+        message.member.roles.remove(b).then(() => {
+          message.member.roles.add(a); //NIVEAU A
+          message.channel.send(
+            `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner.`
+          );
+        });
+      }
+    }
+    if (message.member.roles.cache.has(a.id)) {
+      //NIVEAU A
+      if (nombre < 90) {
+        message.channel.send(
+          `Vous avez tiré le **${nombre}**, malgré ce que vous avez fait, vous avez raté votre entraînement.`
+        );
+      }
+      if (nombre > 90) {
+        if (nombre < 99) {
+          message.member.roles.remove(a).then(() => {
+            message.member.roles.add(aPlus); //NIVEAU A+
+            message.channel.send(
+              `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner.`
+            );
+          });
+        }
+      }
+    }
+    if (message.member.roles.cache.has(aPlus.id)) {
+      //NIVEAU A+
+      if (nombre <= 99) {
+        message.channel.send(
+          `Vous avez tiré le **${nombre}**, malgré ce que vous avez fait, vous avez raté votre entraînement.`
+        );
+      }
+      if (nombre === 100) {
+        message.member.roles.remove(aPlus).then(() => {
+          message.member.roles.add(ultime); //NIVEAU ULTIME
+          message.channel.send(
+            `Vous avez tiré le **${nombre}**, et vous avez réussi a vous entraîner. **Vous êtes a votre niveau maximum !!**`
+          );
+        });
+      }
+    }
+  }
+};
+
+module.exports.help = {
+  name: "roll",
+};
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function animate(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
